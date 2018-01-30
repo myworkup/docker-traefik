@@ -16,8 +16,6 @@ S3_ENCRYPTION_KEY="${S3_ENCRYPTION_KEY-no}"
 [ "${S3_SECRET_KEY}" != 'no' ] &&
 [ "${S3_ENCRYPTION_KEY}" != 'no' ]
 
-[[ $S3_BUCKET ]] && [[ $S3_PATH ]] && [[ $S3_ACCESS_KEY ]] && [[ $S3_SECRET_KEY ]] && [[ $S3_ENCRYPTION_KEY ]]
-
 if [ "$?" -eq 0 ]; then
 
     echo "Configuring backup"
