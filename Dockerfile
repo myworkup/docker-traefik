@@ -1,4 +1,4 @@
-FROM traefik:1.5.1
+FROM traefik:1.5.1-alpine
 
 ADD ./env_secrets_expand.sh /usr/local/bin/env_secrets_expand.sh
 
