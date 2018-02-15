@@ -21,9 +21,6 @@ if [ "$?" -eq 0 ]; then
     echo "Configuring backup"
     echo "0 3 2-31 * 0 root supervisorctl start acme-backup" > /etc/cron.d/backup-weekly
 
-    echo "Waiting 30 seconds to allow restore process to complete if possible"
-    sleep 30
-
 fi
 
 dockerize --template /etc/traefik/traefik.toml.tmpl:/etc/traefik/traefik.toml \
