@@ -69,7 +69,7 @@ swarmmode = {{ default .Env.DOCKER_SWARM_MODE "false" }}
 {{ if isTrue .Env.ACME_ENABLED }}
 
 [acme]
-email = {{ .Env.ACME_EMAIL }}
+email = "{{ .Env.ACME_EMAIL }}"
 storage = "{{ default .Env.ACME_STORAGE "/etc/traefik/acme.json" }}"
 entryPoint = "https"
 OnHostRule = {{ default .Env.ACME_ON_HOST_RULE "true" }}
