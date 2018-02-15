@@ -18,14 +18,20 @@ S3_ENCRYPTION_KEY="${S3_ENCRYPTION_KEY-no}"
 
 if [ "$?" -eq 0 ]; then
 
-    echo "Configuring backup"
-    echo "0 3 2-31 * 0 root supervisorctl start acme-backup" > /etc/cron.d/backup-weekly
+    echo "Attempting to restore ACME backup"
 
-    echo "Waiting 30 seconds to allow restore process to complete if possible"
-    sleep 30
+    URL="s3://${S3_BUCKET}/${S3_PATH}/acme.json"
+    COUNT=$(s3cmd ls ${URL} | wc -l)
+
+    if [[ ${COUNT} -gt 0 ]]; then
+
+        echo 'Backup found, restoring'
+
+        s3cmd get ${URL} /etc/traefik/acme.json
+        chmod 600 /etc/traefik/acme.json
+
+        echo 'Backup restored'
+
+    fi
 
 fi
-
-dockerize --template /etc/traefik/traefik.toml.tmpl:/etc/traefik/traefik.toml \
-            --template /root/.s3cfg.tmpl:/root/.s3cfg \
-            supervisord --configuration /etc/supervisord.conf
