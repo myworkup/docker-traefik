@@ -5,6 +5,9 @@
 debug = false
 checkNewVersion = true
 logLevel = "ERROR"
+
+{{ if isTrue .Env.ACME_ENABLED }}
+
 defaultEntryPoints = ["https", "http"]
 
 [entryPoints]
@@ -17,6 +20,18 @@ defaultEntryPoints = ["https", "http"]
   address = ":443"
   compress = true
   [entryPoints.https.tls]
+
+
+{{ else }}
+
+defaultEntryPoints = ["http"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+  compress = true
+
+{{ end }}
 
 [retry]
 
@@ -31,27 +46,37 @@ defaultEntryPoints = ["https", "http"]
 # Required
 # Default: ":8080"
 #
-    address = ":8080"
+address = ":8080"
 
-    [web.auth.basic]
-    users = ["admin:$2y$05$bUkLbh1xsgg5x5oJn4A4F.t3TD4.SbYh0oosFV2bFtK/n0c56mS36"]
+{{ if isTrue .Env.HTTP_AUTH_ENABLED }}
+
+[web.auth.basic]
+users = ["{{ default .Env.HTTP_AUTH_USER "admin" }}:{{ .Env.HTTP_AUTH_PASSWORD_HASH }}"]
+
+{{ end }}
+
 
 ################################################################
 # Docker configuration backend
 ################################################################
 
 [docker]
-endpoint = "unix:///var/run/docker.sock"
-watch = true
-exposedbydefault = false
-swarmmode = true
+endpoint = "{{ default .Env.DOCKER_ENDPOINT "unix:///var/run/docker.sock" }}"
+watch = {{ default .Env.DOCKER_WATCH "true" }}
+exposedbydefault = {{ default .Env.DOCKER_EXPOSED_BY_DEFAULT "false" }}
+swarmmode = {{ default .Env.DOCKER_SWARM_MODE "false" }}
+
+{{ if isTrue .Env.ACME_ENABLED }}
 
 [acme]
-email = "brian@bluerosedev.com"
-storage = "/etc/traefik/acme.json"
+email = {{ .Env.ACME_EMAIL }}
+storage = "{{ default .Env.ACME_STORAGE "/etc/traefik/acme.json" }}"
 entryPoint = "https"
-OnHostRule = true
-acmeLogging = true
+OnHostRule = {{ default .Env.ACME_ON_HOST_RULE "true" }}
+acmeLogging = {{ default .Env.ACME_LOGGING "true" }}
 
 [acme.httpChallenge]
 entryPoint = "http"
+
+{{ end }}
+

@@ -20,17 +20,7 @@ if [ "$?" -eq 0 ]; then
 
     echo "Configuring backup"
 
-    CONFIG_FILE="/root/.s3cfg"
-
-    sed -i "/access_key = .*/c\access_key = ${S3_ACCESS_KEY}" ${CONFIG_FILE}
-    sed -i "/secret_key = .*/c\secret_key = ${S3_SECRET_KEY}" ${CONFIG_FILE}
-    sed -i "/gpg_passphrase = .*/c\gpg_passphrase = ${S3_ENCRYPTION_KEY}" ${CONFIG_FILE}
-
     # optional parameters
-
-    [[ $S3_HOST_BASE ]] && sed -i "/host_base = .*/c\host_base = ${S3_HOST_BASE}" ${CONFIG_FILE}
-    [[ $S3_HOST_BUCKET ]] && sed -i "/host_bucket = .*/c\host_bucket = ${S3_HOST_BUCKET}" ${CONFIG_FILE}
-
 
     # weekly backup (on sundays, but not the first day of the month)
 
@@ -54,4 +44,6 @@ if [ "$?" -eq 0 ]; then
 
 fi
 
-exec supervisord --configuration /etc/supervisord.conf
+dockerize --template /etc/traefik/traefik.toml.tmpl:/etc/traefik/traefik.toml \
+            --template /root/.s3cfg.tmpl:/root/.s3cfg \
+            supervisord --configuration /etc/supervisord.conf
