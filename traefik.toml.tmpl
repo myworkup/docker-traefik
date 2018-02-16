@@ -6,7 +6,7 @@ debug = false
 checkNewVersion = true
 logLevel = "ERROR"
 
-{{ if isTrue .Env.ACME_ENABLED }}
+{{ if .Env.ACME_ENABLED }}
 
 defaultEntryPoints = ["https", "http"]
 
@@ -48,7 +48,7 @@ defaultEntryPoints = ["http"]
 #
 address = ":8080"
 
-{{ if isTrue .Env.HTTP_AUTH_ENABLED }}
+{{ if .Env.HTTP_AUTH_ENABLED }}
 
 [web.auth.basic]
 users = ["{{ default .Env.HTTP_AUTH_USER "admin" }}:{{ .Env.HTTP_AUTH_PASSWORD_HASH }}"]
@@ -66,7 +66,7 @@ watch = {{ default .Env.DOCKER_WATCH "true" }}
 exposedbydefault = {{ default .Env.DOCKER_EXPOSED_BY_DEFAULT "false" }}
 swarmmode = {{ default .Env.DOCKER_SWARM_MODE "false" }}
 
-{{ if isTrue .Env.ACME_ENABLED }}
+{{ if .Env.ACME_ENABLED }}
 
 [acme]
 email = "{{ .Env.ACME_EMAIL }}"
