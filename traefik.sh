@@ -18,11 +18,9 @@ S3_ENCRYPTION_KEY="${S3_ENCRYPTION_KEY-no}"
 
 if [ "$?" -eq 0 ]; then
 
-    echo "Configuring backup"
-    echo "0 3 2-31 * 0 root supervisorctl start acme-backup" > /etc/cron.d/backup-weekly
+    echo "sleeping 30 seconds to allow for ACME file restore"
+    sleep 30
 
 fi
 
-dockerize --template /etc/traefik/traefik.toml.tmpl:/etc/traefik/traefik.toml \
-            --template /root/.s3cfg.tmpl:/root/.s3cfg \
-            supervisord --configuration /etc/supervisord.conf
+/usr/local/bin/traefik
