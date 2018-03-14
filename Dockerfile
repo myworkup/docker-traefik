@@ -31,7 +31,6 @@ ADD ./supervisord.conf /etc/supervisord.conf
 ADD ./entrypoint.sh /entrypoint.sh
 ADD ./.s3cfg.tmpl /root/.s3cfg.tmpl
 ADD ./backup.sh /usr/local/bin/backup.sh
-ADD ./restore.sh /usr/local/bin/restore.sh
 ADD ./traefik.sh /usr/local/bin/traefik.sh
 
 ADD traefik.toml.tmpl /etc/traefik/
