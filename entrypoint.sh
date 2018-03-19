@@ -21,7 +21,8 @@ if [ "$?" -eq 0 ]; then
     echo "Configuring backup"
     echo "0 3 2-31 * 0 root supervisorctl start acme-backup" > /etc/cron.d/backup-weekly
 
-    dockerize --template /root/.s3cfg.tmpl:/root/.s3cfg /usr/local/bin/restore.sh
+    dockerize --template /root/.s3cfg.tmpl:/root/.s3cfg
+    /usr/local/bin/restore.sh
 
 fi
 
