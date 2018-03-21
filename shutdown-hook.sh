@@ -1,10 +1,18 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 set -e
 
-. /usr/local/bin/env_secrets_expand.sh
+# SIGUSR1-handler
+my_handler() {
+  echo "### Sigusr1 triggered ###"
+}
+
 
 # SIGTERM-handler
 term_handler() {
+
+    echo '### Shutdown hook triggering ###'
+
+    . /usr/local/bin/env_secrets_expand.sh
 
     S3_BUCKET="${S3_BUCKET-no}"
     S3_PATH="${S3_PATH-no}"
@@ -30,7 +38,11 @@ term_handler() {
 
 # setup handlers
 # on callback, kill the last background process, which is `tail -f /dev/null` and execute the specified handler
+trap 'kill ${!}; my_handler' SIGUSR1
 trap 'kill ${!}; term_handler' SIGTERM
+
+
+echo '### Shutdown hook starting to wait ###'
 
 # wait forever
 while true
