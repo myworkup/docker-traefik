@@ -1,11 +1,11 @@
-FROM traefik:1.5-alpine
+FROM traefik:1.7-alpine
 
 ADD ./env_secrets_expand.sh /usr/local/bin/env_secrets_expand.sh
 
 # install s3cmd, cron and supervisord
 
-ENV S3CMD_VERSION 1.6.1
-ENV SUPERVISOR_VERSION=3.3.1
+ENV S3CMD_VERSION 2.0.2
+ENV SUPERVISOR_VERSION=3.3.5
 ENV DOCKERIZE_VERSION v0.6.0
 
 RUN apk update && \
